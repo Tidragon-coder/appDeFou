@@ -1,5 +1,7 @@
-name: CI/CD
+name: CI
 
+# Le déploiement (CD) est géré par l'intégration GitHub de Vercel :
+# production à chaque push sur master, preview à chaque pull request.
 on:
   push:
     branches: [master]
@@ -30,34 +32,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-  # CD : déploie en production sur Vercel (uniquement sur master)
-  deploy:
-    needs: build
-    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.url }}
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-
-      - run: npm install --global vercel@latest
-
-      - name: Récupérer la config du projet Vercel
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Vercel
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Déploiement
-        id: deploy
-        run: echo "url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
