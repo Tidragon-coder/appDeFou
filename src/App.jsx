@@ -3,6 +3,7 @@ import { Routes, Route, Link } from "react-router";
 import Pokemon from "./components/Pokemon";
 import Home from "./pages/Home";
 import PokeDetails from "./pages/PokeDetails";
+import AddPokemon from "./pages/AddPokemon";
 
 function App() {
     const [pokemons, setPokemons] = useState([]);       // État pour stocker la liste des pokémons
@@ -39,13 +40,14 @@ function App() {
         <div>
             {/* Menu de navigation */}
             <nav>
-                <Link to="/">Accueil</Link> | <Link to="/poke/1">Détails (pokémon 1)</Link>
+                <Link to="/">Accueil</Link> | <Link to="/poke/1">Détails (pokémon 1)</Link> | <Link to="/add">Ajouter un pokémon</Link>
             </nav>
 
             {/* Routes principales */}
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/poke/:id" element={<PokeDetails />} />
+                <Route path="/add" element={<AddPokemon />} />
             </Routes>
 
             <h1>Mon pokedex</h1>
